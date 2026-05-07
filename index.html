@@ -1,0 +1,80 @@
+<!--
+Author: Abby Wang
+Date: May 6, 2026
+Description: HTML page for SOL.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signs of Life</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: white;
+      font-family: "Courier New", Courier, monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    img {
+      max-width: 500px;
+      cursor: pointer;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="herzog.png" id="deviceImage" alt="Connect Device">
+
+  <div id="status">
+    Sigh really hard (in front of the hoop), show some sign of life.
+  </div>
+
+  <script>
+    const statusText = document.getElementById("status");
+    const image = document.getElementById("deviceImage");
+
+    image.addEventListener("click", async () => {
+      if (!("usb" in navigator)) {
+        statusText.textContent = "Try again.";
+        return;
+      }
+
+      try {
+        statusText.textContent = "Searching...";
+
+        const device = await navigator.usb.requestDevice({
+          filters: [] // You can add vendorId for Arduino if needed
+        });
+
+        await device.open();
+        statusText.textContent = "<i>Signs of Life</i>, 1968 <br> Werner Herzog";
+
+        // NOTE:
+        // This does NOT upload or run .ino files.
+        // It only connects to an already-programmed Arduino.
+
+        // Example: send a signal (depends on your firmware)
+        // await device.transferOut(1, new TextEncoder().encode("START"));
+
+        statusText.textContent += "<i>Signs of Life</i>, 1968 <br> Werner Herzog";
+
+      } catch (error) {
+        statusText.textContent = "Try again.";
+      }
+    });
+  </script>
+
+</body>
+</html>
